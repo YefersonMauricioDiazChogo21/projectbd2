@@ -457,12 +457,16 @@ Vendedor
 3. El sistema llama a un procedimiento almacenado para registrar la venta y sus detalles.
 4. El procedimiento almacenado inserta la venta y sus detalles en las tablas correspondientes.
 
-  Caso de Uso 3: Generación de Reporte de Ventas por Cliente
-  Descripción: Este caso de uso describe cómo el sistema genera un reporte de ventas para un
-  cliente específico, mostrando todas las ventas realizadas por el cliente y los detalles de cada venta.
-  Actores:
+###   Caso de Uso 3: Generación de Reporte de Ventas por Cliente
+
+  **Descripción: Este caso de uso describe cómo el sistema genera un reporte de ventas para un**
+  **cliente específico, mostrando todas las ventas realizadas por el cliente y los detalles de cada venta.**
+
+#####   Actores:
+
   Administrador
-  Flujo Principal:
+
+#####   Flujo Principal:
 
 1. El administrador ingresa al sistema.
 2. El administrador selecciona un cliente para generar un reporte de ventas.
@@ -470,12 +474,16 @@ Vendedor
 4. El procedimiento almacenado obtiene las ventas y los detalles de las ventas realizadas por el
       cliente.
 
-  Caso de Uso 4: Registro de Compra de Repuestos
-  Descripción: Este caso de uso describe cómo el sistema registra una nueva compra de repuestos
-  a un proveedor.
-  Actores:
+###   Caso de Uso 4: Registro de Compra de Repuestos
+
+  **Descripción: Este caso de uso describe cómo el sistema registra una nueva compra de repuestos**
+  **a un proveedor.**
+
+#####   Actores:
+
   Administrador de Compras
-  Flujo Principal:
+
+#####   Flujo Principal:
 
 1. El administrador de compras ingresa al sistema.
 2. El administrador registra una nueva compra.
@@ -483,24 +491,33 @@ Vendedor
 4. El procedimiento almacenado inserta la compra y sus detalles en las tablas correspondientes
       y actualiza el stock de repuestos.
 
-  Caso de Uso 5: Generación de Reporte de Inventario
-  Descripción: Este caso de uso describe cómo el sistema genera un reporte de inventario de
-  bicicletas y repuestos.
-  Actores:
+###   Caso de Uso 5: Generación de Reporte de Inventario
+
+  **Descripción: Este caso de uso describe cómo el sistema genera un reporte de inventario de**
+  **bicicletas y repuestos.**
+
+#####   Actores:
+
   Administrador de Inventario
-  Flujo Principal:
+
+#####   Flujo Principal:
 
 1. El administrador de inventario ingresa al sistema.
 2. El administrador solicita un reporte de inventario.
 3. El sistema llama a un procedimiento almacenado para generar el reporte.
 4. El procedimiento almacenado obtiene la información del inventario de bicicletas y repuestos.
 
-  Caso de Uso 6: Actualización Masiva de Precios
-  Descripción: Este caso de uso describe cómo el sistema permite actualizar masivamente los
-  precios de todas las bicicletas de una marca específica.
-  Actores:
+###   Caso de Uso 6: Actualización Masiva de Precios
+
+#####   **Descripción: Este caso de uso describe cómo el sistema permite actualizar masivamente los**
+
+  **precios de todas las bicicletas de una marca específica.**
+
+#####   Actores:
+
   Administrador
-  Flujo Principal:
+
+#####   Flujo Principal:
 
 1. El administrador ingresa al sistema.
 2. El administrador selecciona la opción para actualizar los precios de una marca específica.
@@ -509,48 +526,64 @@ Vendedor
 5. El procedimiento almacenado actualiza los precios de todas las bicicletas de la marca
       especificada.
 
-  Caso de Uso 7: Generación de Reporte de Clientes por Ciudad
-  Descripción: Este caso de uso describe cómo el sistema genera un reporte de clientes agrupados
-  por ciudad.
-  Actores:
+###   Caso de Uso 7: Generación de Reporte de Clientes por Ciudad
+
+  **Descripción: Este caso de uso describe cómo el sistema genera un reporte de clientes agrupados**
+  **por ciudad.**
+
+#####   Actores:
+
   Administrador
-  Flujo Principal:
+
+#####   Flujo Principal:
 
 1. El administrador ingresa al sistema.
 2. El administrador selecciona la opción para generar un reporte de clientes por ciudad.
 3. El sistema llama a un procedimiento almacenado para generar el reporte.
 4. El procedimiento almacenado obtiene la información de los clientes agrupados por ciudad.
 
-Caso de Uso 8: Verificación de Stock antes de Venta
-Descripción: Este caso de uso describe cómo el sistema verifica el stock de una bicicleta antes de
-permitir la venta.
-Actores:
+### Caso de Uso 8: Verificación de Stock antes de Venta
+
+**Descripción: Este caso de uso describe cómo el sistema verifica el stock de una bicicleta antes de**
+**permitir la venta.**
+
+##### Actores:
+
 Vendedor
-Flujo Principal:
+
+##### Flujo Principal:
+
 1. El vendedor ingresa al sistema.
 2. El vendedor selecciona una bicicleta para vender.
 3. El sistema llama a un procedimiento almacenado para verificar el stock.
 4. El procedimiento almacenado devuelve un mensaje indicando si hay suficiente stock para
     realizar la venta.
 
-Caso de Uso 9: Registro de Devoluciones
-Descripción: Este caso de uso describe cómo el sistema registra la devolución de una bicicleta por
-un cliente.
-Actores:
+### Caso de Uso 9: Registro de Devoluciones
+
+**Descripción: Este caso de uso describe cómo el sistema registra la devolución de una bicicleta por**
+**un cliente.**
+
+##### Actores:
+
 Vendedor
-Flujo Principal:
+
+##### Flujo Principal:
 
 1. El vendedor ingresa al sistema.
 2. El vendedor registra una devolución de bicicleta.
 3. El sistema llama a un procedimiento almacenado para registrar la devolución.
 4. El procedimiento almacenado inserta la devolución y actualiza el stock de la bicicleta.
 
-Caso de Uso 10: Generación de Reporte de Compras por Proveedor
-Descripción: Este caso de uso describe cómo el sistema genera un reporte de compras realizadas
-a un proveedor específico, mostrando todos los detalles de las compras.
-Actores:
+### Caso de Uso 10: Generación de Reporte de Compras por Proveedor
+
+**Descripción: Este caso de uso describe cómo el sistema genera un reporte de compras realizadas a un proveedor específico, mostrando todos los detalles de las compras.**
+
+##### Actores:
+
 Administrador de Compras
-Flujo Principal:
+
+##### Flujo Principal:
 
 1. El administrador de compras ingresa al sistema.
 2. El administrador selecciona un proveedor para generar un reporte de compras.
@@ -569,176 +602,259 @@ Flujo Principal:
 3. El sistema llama a un procedimiento almacenado para calcular el total con descuento.
 4. El procedimiento almacenado calcula el total con el descuento aplicado y registra la venta.
 
-Casos de Uso para Funciones de Resumen
-Caso de Uso 1: Calcular el Total de Ventas Mensuales
-Descripción: Este caso de uso describe cómo el sistema calcula el total de ventas realizadas en un
-mes específico.
-Actores:
+## Casos de Uso para Funciones de Resumen
+
+### Caso de Uso 1: Calcular el Total de Ventas Mensuales
+
+**Descripción: Este caso de uso describe cómo el sistema calcula el total de ventas realizadas en un**
+**mes específico.**
+
+##### Actores:
+
 Administrador
-Flujo Principal:
+
+##### Flujo Principal:
 
 1. El administrador ingresa al sistema.
 2. El administrador selecciona la opción para calcular el total de ventas mensuales.
 3. El administrador ingresa el mes y el año.
 4. El sistema llama a un procedimiento almacenado para calcular el total de ventas.
 5. El procedimiento almacenado devuelve el total de ventas del mes especificado.
-    Caso de Uso 2: Calcular el Promedio de Ventas por Cliente
-    Descripción: Este caso de uso describe cómo el sistema calcula el promedio de ventas realizadas
-    por un cliente específico.
-    Actores:
-    Administrador
-    Flujo Principal:
-6. El administrador ingresa al sistema.
-7. El administrador selecciona la opción para calcular el promedio de ventas por cliente.
-8. El administrador ingresa el ID del cliente.
-9. El sistema llama a un procedimiento almacenado para calcular el promedio de ventas.
-10. El procedimiento almacenado devuelve el promedio de ventas del cliente especificado.
 
-Caso de Uso 3: Contar el Número de Ventas Realizadas en un Rango de
-Fechas
-Descripción: Este caso de uso describe cómo el sistema cuenta el número de ventas realizadas
-dentro de un rango de fechas específico.
-Actores:
+### Caso de Uso 2: Calcular el Promedio de Ventas por Cliente
+
+  **Descripción: Este caso de uso describe cómo el sistema calcula el promedio de ventas realizadas**
+  **por un cliente específico.**
+
+#####   Actores:
+
+  Administrador
+
+#####   Flujo Principal:
+
+1. El administrador ingresa al sistema.
+2. El administrador selecciona la opción para calcular el promedio de ventas por cliente.
+3. El administrador ingresa el ID del cliente.
+4. El sistema llama a un procedimiento almacenado para calcular el promedio de ventas.
+5. El procedimiento almacenado devuelve el promedio de ventas del cliente especificado.
+
+### Caso de Uso 3: Contar el Número de Ventas Realizadas en un Rango de fechas
+
+**Descripción: Este caso de uso describe cómo el sistema cuenta el número de ventas realizadas**
+**dentro de un rango de fechas específico.**
+
+##### Actores:
+
 Administrador
-Flujo Principal:
+
+##### Flujo Principal:
+
 1. El administrador ingresa al sistema.
 2. El administrador selecciona la opción para contar el número de ventas en un rango de
-fechas.
+  fechas.
 3. El administrador ingresa las fechas de inicio y fin.
 4. El sistema llama a un procedimiento almacenado para contar las ventas.
 5. El procedimiento almacenado devuelve el número de ventas en el rango de fechas
-especificado.
-Caso de Uso 4: Calcular el Total de Repuestos Comprados por Proveedor
-Descripción: Este caso de uso describe cómo el sistema calcula el total de repuestos comprados a
-un proveedor específico.
-Actores:
+  especificado.
+
+### Caso de Uso 4: Calcular el Total de Repuestos Comprados por Proveedor
+
+**Descripción: Este caso de uso describe cómo el sistema calcula el total de repuestos comprados a**
+**un proveedor específico.**
+
+##### Actores:
+
 Administrador de Compras
-Flujo Principal:
+
+##### Flujo Principal:
+
 1. El administrador de compras ingresa al sistema.
 2. El administrador selecciona la opción para calcular el total de repuestos comprados por
-proveedor.
+  proveedor.
 3. El administrador ingresa el ID del proveedor.
 4. El sistema llama a un procedimiento almacenado para calcular el total de repuestos.
 5. El procedimiento almacenado devuelve el total de repuestos comprados al proveedor
-especificado.
-Caso de Uso 5: Calcular el Ingreso Total por Año
-Descripción: Este caso de uso describe cómo el sistema calcula el ingreso total generado en un
-año específico.
-Actores:
+  especificado.
+
+### Caso de Uso 5: Calcular el Ingreso Total por Año
+
+**Descripción: Este caso de uso describe cómo el sistema calcula el ingreso total generado en un**
+**año específico.**
+
+##### Actores:
+
 Administrador
-Flujo Principal:
+
+##### Flujo Principal:
+
 1. El administrador ingresa al sistema.
 2. El administrador selecciona la opción para calcular el ingreso total por año.
 3. El administrador ingresa el año.
 4. El sistema llama a un procedimiento almacenado para calcular el ingreso total.
-
 5. El procedimiento almacenado devuelve el ingreso total del año especificado.
-Caso de Uso 6: Calcular el Número de Clientes Activos en un Mes
+
+### Caso de Uso 6: Calcular el Número de Clientes Activos en un Mes
+
 Descripción: Este caso de uso describe cómo el sistema cuenta el número de clientes que han
-realizado al menos una compra en un mes específico.
-Actores:
+**realizado al menos una compra en un mes es pecífico.**
+
+##### Actores:
+
 Administrador
-Flujo Principal:
+
+##### Flujo Principal:
+
 1. El administrador ingresa al sistema.
 2. El administrador selecciona la opción para contar el número de clientes activos en un mes.
 3. El administrador ingresa el mes y el año.
 4. El sistema llama a un procedimiento almacenado para contar los clientes activos.
 5. El procedimiento almacenado devuelve el número de clientes que han realizado compras en
-el mes especificado.
-Caso de Uso 7: Calcular el Promedio de Compras por Proveedor
-Descripción: Este caso de uso describe cómo el sistema calcula el promedio de compras
-realizadas a un proveedor específico.
-Actores:
+  el mes especificado.
+
+### Caso de Uso 7: Calcular el Promedio de Compras por Proveedor
+
+**Descripción: Este caso de uso describe cómo el sistema calcula el promedio de compras**
+**realizadas a un proveedor específico.**
+
+##### Actores:
+
 Administrador de Compras
-Flujo Principal:
+
+##### Flujo Principal:
+
 1. El administrador de compras ingresa al sistema.
 2. El administrador selecciona la opción para calcular el promedio de compras por proveedor.
 3. El administrador ingresa el ID del proveedor.
 4. El sistema llama a un procedimiento almacenado para calcular el promedio de compras.
 5. El procedimiento almacenado devuelve el promedio de compras del proveedor especificado.
-Caso de Uso 8: Calcular el Total de Ventas por Marca
-Descripción: Este caso de uso describe cómo el sistema calcula el total de ventas agrupadas por
-la marca de las bicicletas vendidas.
-Actores:
+
+### Caso de Uso 8: Calcular el Total de Ventas por Marca
+
+**Descripción: Este caso de uso describe cómo el sistema calcula el total de ventas agrupadas por**
+**la marca de las bicicletas vendidas.**
+
+##### Actores:
+
 Administrador
-Flujo Principal:
+
+##### Flujo Principal:
+
 1. El administrador ingresa al sistema.
 2. El administrador selecciona la opción para calcular el total de ventas por marca.
 3. El sistema llama a un procedimiento almacenado para calcular el total de ventas por marca.
 4. El procedimiento almacenado devuelve el total de ventas agrupadas por marca.
 
-Caso de Uso 9: Calcular el Promedio de Precios de Bicicletas por Marca
-Descripción: Este caso de uso describe cómo el sistema calcula el promedio de precios de las
-bicicletas agrupadas por marca.
-Actores:
+### Caso de Uso 9: Calcular el Promedio de Precios de Bicicletas por Marca
+
+**Descripción: Este caso de uso describe cómo el sistema calcula el promedio de precios de las**
+**bicicletas agrupadas por marca.**
+
+##### Actores:
+
 Administrador
-Flujo Principal:
+
+##### Flujo Principal:
+
 1. El administrador ingresa al sistema.
 2. El administrador selecciona la opción para calcular el promedio de precios por marca.
 3. El sistema llama a un procedimiento almacenado para calcular el promedio de precios.
 4. El procedimiento almacenado devuelve el promedio de precios agrupadas por marca.
-Caso de Uso 10: Contar el Número de Repuestos por Proveedor
-Descripción: Este caso de uso describe cómo el sistema cuenta el número de repuestos
-suministrados por cada proveedor.
-Actores:
+
+### Caso de Uso 10: Contar el Número de Repuestos por Proveedor
+
+**Descripción: Este caso de uso describe cómo el sistema cuenta el número de repuestos**
+**suministrados por cada proveedor.**
+
+##### Actores:
+
 Administrador de Compras
-Flujo Principal:
+
+##### Flujo Principal:
+
 1. El administrador de compras ingresa al sistema.
 2. El administrador selecciona la opción para contar el número de repuestos por proveedor.
 3. El sistema llama a un procedimiento almacenado para contar los repuestos.
 4. El procedimiento almacenado devuelve el número de repuestos suministrados por cada
-proveedor.
-Caso de Uso 11: Calcular el Total de Ingresos por Cliente
-Descripción: Este caso de uso describe cómo el sistema calcula el total de ingresos generados por
-cada cliente.
-Actores:
+  proveedor.
+
+### Caso de Uso 11: Calcular el Total de Ingresos por Cliente
+
+**Descripción: Este caso de uso describe cómo el sistema calcula el total de ingresos generados por**
+**cada cliente.**
+
+##### Actores:
+
 Administrador
-Flujo Principal:
+
+##### Flujo Principal:
+
 1. El administrador ingresa al sistema.
 2. El administrador selecciona la opción para calcular el total de ingresos por cliente.
 3. El sistema llama a un procedimiento almacenado para calcular el total de ingresos.
 4. El procedimiento almacenado devuelve el total de ingresos generados por cada cliente.
-Caso de Uso 12: Calcular el Promedio de Compras Mensuales
-Descripción: Este caso de uso describe cómo el sistema calcula el promedio de compras
-realizadas mensualmente por todos los clientes.
-Actores:
+
+### Caso de Uso 12: Calcular el Promedio de Compras Mensuales
+
+**Descripción: Este caso de uso describe cómo el sistema calcula el promedio de compras**
+**realizadas mensualmente por todos los clientes.**
+
+##### Actores:
 
 Administrador
-Flujo Principal:
+
+##### Flujo Principal:
+
 1. El administrador ingresa al sistema.
 2. El administrador selecciona la opción para calcular el promedio de compras mensuales.
 3. El sistema llama a un procedimiento almacenado para calcular el promedio de compras
-mensuales.
+  mensuales.
 4. El procedimiento almacenado devuelve el promedio de compras realizadas mensualmente.
-Caso de Uso 13: Calcular el Total de Ventas por Día de la Semana
-Descripción: Este caso de uso describe cómo el sistema calcula el total de ventas realizadas en
-cada día de la semana.
-Actores:
+
+### Caso de Uso 13: Calcular el Total de Ventas por Día de la Semana
+
+**Descripción: Este caso de uso describe cómo el sistema calcula el total de ventas realizadas en**
+**cada día de la semana.**
+
+##### Actores:
+
 Administrador
-Flujo Principal:
+
+##### Flujo Principal:
+
 1. El administrador ingresa al sistema.
 2. El administrador selecciona la opción para calcular el total de ventas por día de la semana.
 3. El sistema llama a un procedimiento almacenado para calcular el total de ventas.
 4. El procedimiento almacenado devuelve el total de ventas agrupadas por día de la semana.
-Caso de Uso 14: Contar el Número de Ventas por Categoría de Bicicleta
-Descripción: Este caso de uso describe cómo el sistema cuenta el número de ventas realizadas
-para cada categoría de bicicleta (por ejemplo, montaña, carretera, híbrida).
-Actores:
+
+### Caso de Uso 14: Contar el Número de Ventas por Categoría de Bicicleta
+
+**Descripción: Este caso de uso describe cómo el sistema cuenta el número de ventas realizadas**
+**para cada categoría de bicicleta (por ejemplo, montaña, carretera, híbrida).**
+
+##### Actores:
+
 Administrador
-Flujo Principal:
+
+##### Flujo Principal:
+
 1. El administrador ingresa al sistema.
 2. El administrador selecciona la opción para contar el número de ventas por categoría de
-bicicleta.
+  bicicleta.
 3. El sistema llama a un procedimiento almacenado para contar las ventas.
 4. El procedimiento almacenado devuelve el número de ventas por categoría de bicicleta.
-Caso de Uso 15: Calcular el Total de Ventas por Año y Mes
-Descripción: Este caso de uso describe cómo el sistema calcula el total de ventas realizadas cada
-mes, agrupadas por año.
-Actores:
+
+### Caso de Uso 15: Calcular el Total de Ventas por Año y Mes
+
+**Descripción: Este caso de uso describe cómo el sistema calcula el total de ventas realizadas cada**
+**mes, agrupadas por año.**
+
+##### Actores:
+
 Administrador
-Flujo Principal:
+
+##### Flujo Principal:
+
 1. El administrador ingresa al sistema.
 2. El administrador selecciona la opción para calcular el total de ventas por año y mes.
-
 3. El sistema llama a un procedimiento almacenado para calcular el total de ventas.
 4. El procedimiento almacenado devuelve el total de ventas agrupadas por año y mes.
