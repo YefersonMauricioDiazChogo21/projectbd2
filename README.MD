@@ -35,7 +35,7 @@ Administrador de Inventario
    ```sql
    UPDATE bike
    SET price=1800 ,stock=25
-   WHERE id=4;
+   WHERE id=?;
    ```
 
 7. El sistema valida y guarda los cambios.
@@ -43,7 +43,7 @@ Administrador de Inventario
 8. El administrador selecciona una bicicleta para eliminar.
 
    ```SQL
-   DELETE FROM bike WHERE id=4;
+   DELETE FROM bike WHERE id=?;
    ```
 
 9. El sistema elimina la bicicleta seleccionada del inventario.
@@ -68,16 +68,36 @@ Vendedor
 3. El vendedor selecciona el cliente que realiza la compra.
 
    ```sql
-   
+   INSERT INTO sale (sale_date,id_customer,total) VALUES (NOW(),?,0);
    ```
 
 4. El vendedor selecciona las bicicletas que el cliente desea comprar y especifica la cantidad.
 
+   ```sql
+   INSERT INTO sale_detail (id_sale,id_bike,amount,unit_price) VALUES (?,?,?,?);
+   ```
+
 5. El sistema calcula el total de la venta.
+
+   ```java
+   float newtotal=amount*unit_price;
+   ```
 
 6. El vendedor confirma la venta.
 
 7. El sistema guarda la venta y actualiza el inventario de bicicletas.
+
+   ```sql
+   UPDATE sale 
+   SET total=newtotal
+   WHERE id=?;
+   
+   newstock=stock-amount
+   
+   UPDATE bike
+   SET stock=newstock
+   WHERE id=?;
+   ```
 
 ### Caso de Uso 3: Gestión de Proveedores y Repuestos
 
@@ -92,23 +112,69 @@ Administrador de Proveedores
 ##### Flujo Principal:
 
 1. El administrador de proveedores ingresa al sistema.
+
 2. El administrador selecciona la opción para agregar un nuevo proveedor.
+
 3. El administrador ingresa los detalles del proveedor (nombre, contacto, teléfono, correo
     electrónico, ciudad).
+
+    ```sql
+    INSERT INTO supplier (supplier_name,contact_name,phone,email,id_city) VALUES
+    (? ,? ,? ,? ,? );
+    ```
+
 4. El sistema valida y guarda la información del nuevo proveedor.
+
 5. El administrador selecciona la opción para agregar un nuevo repuesto.
+
 6. El administrador ingresa los detalles del repuesto (nombre, descripción, precio, stock,
     proveedor).
+
+    ```sql
+    INSERT INTO replacement (replacement_name,replacement_description,price,stock,id_supplier) VALUES
+    (? ,? ,? ,? ,? );
+    ```
+
 7. El sistema valida y guarda la información del nuevo repuesto.
+
 8. El administrador selecciona un proveedor existente para actualizar.
+
 9. El administrador actualiza la información del proveedor.
+
+    ```sql
+    UPDATE supplier
+    SET supplier_name=? ,contact_name=? ,phone=? ,email=? ,id_city=?
+    WHERE id=?;
+    ```
+
 10. El sistema valida y guarda los cambios.
+
 11. El administrador selecciona un repuesto existente para actualizar.
+
 12. El administrador actualiza la información del repuesto.
+
+     ```sql
+     UPDATE replacement
+     SET replacement_name=? ,replacement_description=? ,price,stock=? ,id_supplier=?
+     WHERE id=?;
+     ```
+
 13. El sistema valida y guarda los cambios.
+
 14. El administrador selecciona un proveedor para eliminar.
+
+     ```sql
+     DELETE supplier WHERE id=?;
+     ```
+
 15. El sistema elimina el proveedor seleccionado.
+
 16. El administrador selecciona un repuesto para eliminar.
+
+     ```sql
+     DELETE replacement WHERE id=?;
+     ```
+
 17. El sistema elimina el repuesto seleccionado.
 
 ### Caso de Uso 4: Consulta de Historial de Ventas por Cliente
@@ -125,12 +191,43 @@ Administrador
 ##### Flujo Principal:
 
 1. El usuario ingresa al sistema.
+
 2. El usuario selecciona la opción para consultar el historial de ventas.
+
 3. El usuario selecciona el cliente del cual desea ver el historial.
+
 4. El sistema muestra todas las ventas realizadas por el cliente seleccionado.
+
+    ```sql
+    SELECT 
+    	id,
+    	sale_date,
+    	total
+    FROM
+    	sale
+    WHERE
+    	id_customer=?;
+    ```
+
 5. El usuario selecciona una venta específica para ver los detalles.
+
 6. El sistema muestra los detalles de la venta seleccionada (bicicletas compradas, cantidad,
     precio).
+
+    ```sql
+    SELECT
+    	sd.id,
+    	b.id_bike_model,
+        b.id_bike_brand,
+        sd.amount,
+        s.total
+    FROM sale_detail sd
+    JOIN sale s ON s.id = sd.id_sale
+    JOIN bike b ON b.id = sd.id_bike
+    WHERE id_sale=?;
+    ```
+
+    
 
 ### Caso de Uso 5: Gestión de Compras de Repuestos
 
@@ -145,12 +242,26 @@ Administrador de Compras
 ##### Flujo Principal:
 
 1. El administrador de compras ingresa al sistema.
+
 2. El administrador selecciona la opción para registrar una nueva compra.
+
 3. El administrador selecciona el proveedor al que se realizó la compra.
+
 4. El administrador ingresa los detalles de la compra (fecha, total).
+
+    ```sql
+    INSERT INTO purchase (purchase_date, id_supplier, total) VALUES (?,?,?);
+    ```
+
 5. El sistema guarda la compra y genera un identificador único.
+
 6. El administrador selecciona los repuestos comprados y especifica la cantidad y el precio
     unitario.
+
+    ```sql
+    INSERT INTO purchase_detail ()
+    ```
+
 7. El sistema guarda los detalles de la compra y actualiza el stock de los repuestos comprados.
 
 ## Casos de Uso con Subconsultas
@@ -286,13 +397,17 @@ Administrador de Compras
 3. El sistema muestra una lista de proveedores con el total de repuestos comprados a cada
     uno.
 
-Caso de Uso 14: Clientes con Ventas en un Rango de Fechas
-Descripción: Este caso de uso describe cómo el sistema permite consultar los clientes que han
-realizado compras dentro de un rango de fechas específico.
-Actores:
+### Caso de Uso 14: Clientes con Ventas en un Rango de Fechas
+
+**Descripción: Este caso de uso describe cómo el sistema permite consultar los clientes que han**
+**realizado compras dentro de un rango de fechas específico.**
+
+##### Actores:
+
 Vendedor
 Administrador
-Flujo Principal:
+
+##### Flujo Principal:
 
 1. El usuario ingresa al sistema.
 2. El usuario selecciona la opción para consultar los clientes con ventas en un rango de fechas.
@@ -300,27 +415,42 @@ Flujo Principal:
 4. El sistema muestra una lista de clientes que han realizado compras dentro del rango de
     fechas especificado.
 
-Casos de Uso para Implementar Procedimientos
-Almacenados
-Caso de Uso 1: Actualización de Inventario de Bicicletas
-Descripción: Este caso de uso describe cómo el sistema actualiza el inventario de bicicletas
-cuando se realiza una venta.
-Actores:
+## Casos de Uso para Implementar Procedimientos Almacenados
+
+### Caso de Uso 1: Actualización de Inventario de Bicicletas
+
+**Descripción: Este caso de uso describe cómo el sistema actualiza el inventario de bicicletas**
+**cuando se realiza una venta.**
+
+##### Actores:
+
 Vendedor
-Flujo Principal:
+
+##### Flujo Principal:
 
 1. El vendedor ingresa al sistema.
+
 2. El vendedor registra una venta de bicicletas.
+
 3. El sistema llama a un procedimiento almacenado para actualizar el inventario de las
     bicicletas vendidas.
+
+    ```sql
+    
+    ```
+
 4. El procedimiento almacenado actualiza el stock de cada bicicleta.
 
-Caso de Uso 2: Registro de Nueva Venta
-Descripción: Este caso de uso describe cómo el sistema registra una nueva venta, incluyendo la
-creación de la venta y la inserción de los detalles de la venta.
-Actores:
+### Caso de Uso 2: Registro de Nueva Venta
+
+**Descripción: Este caso de uso describe cómo el sistema registra una nueva venta, incluyendo la**
+**creación de la venta y la inserción de los detalles de la venta.**
+
+##### Actores:
+
 Vendedor
-Flujo Principal:
+
+##### Flujo Principal:
 
 1. El vendedor ingresa al sistema.
 2. El vendedor registra una nueva venta.
@@ -401,7 +531,7 @@ Flujo Principal:
 2. El vendedor selecciona una bicicleta para vender.
 3. El sistema llama a un procedimiento almacenado para verificar el stock.
 4. El procedimiento almacenado devuelve un mensaje indicando si hay suficiente stock para
-  realizar la venta.
+    realizar la venta.
 
 Caso de Uso 9: Registro de Devoluciones
 Descripción: Este caso de uso describe cómo el sistema registra la devolución de una bicicleta por
@@ -426,7 +556,7 @@ Flujo Principal:
 2. El administrador selecciona un proveedor para generar un reporte de compras.
 3. El sistema llama a un procedimiento almacenado para generar el reporte.
 4. El procedimiento almacenado obtiene las compras y los detalles de las compras realizadas al
-  proveedor.
+    proveedor.
 
 Caso de Uso 11: Calculadora de Descuentos en Ventas
 Descripción: Este caso de uso describe cómo el sistema aplica un descuento a una venta antes de
@@ -452,12 +582,12 @@ Flujo Principal:
 3. El administrador ingresa el mes y el año.
 4. El sistema llama a un procedimiento almacenado para calcular el total de ventas.
 5. El procedimiento almacenado devuelve el total de ventas del mes especificado.
-  Caso de Uso 2: Calcular el Promedio de Ventas por Cliente
-  Descripción: Este caso de uso describe cómo el sistema calcula el promedio de ventas realizadas
-  por un cliente específico.
-  Actores:
-  Administrador
-  Flujo Principal:
+    Caso de Uso 2: Calcular el Promedio de Ventas por Cliente
+    Descripción: Este caso de uso describe cómo el sistema calcula el promedio de ventas realizadas
+    por un cliente específico.
+    Actores:
+    Administrador
+    Flujo Principal:
 6. El administrador ingresa al sistema.
 7. El administrador selecciona la opción para calcular el promedio de ventas por cliente.
 8. El administrador ingresa el ID del cliente.

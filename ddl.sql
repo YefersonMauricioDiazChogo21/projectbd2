@@ -77,8 +77,8 @@ CREATE TABLE supplier(
     id INT AUTO_INCREMENT,
     supplier_name VARCHAR(20) UNIQUE,
     contact_name VARCHAR(20),
-    phone INT UNIQUE,
-    email VARCHAR(20) UNIQUE,
+    phone VARCHAR(20) UNIQUE,
+    email VARCHAR(50) UNIQUE,
     id_city INT,
     CONSTRAINT pk_id_supplier PRIMARY KEY (id),
     CONSTRAINT fk_id_city_supplier FOREIGN KEY (id_city) REFERENCES city(id)
