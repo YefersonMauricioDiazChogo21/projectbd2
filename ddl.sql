@@ -44,8 +44,8 @@ CREATE TABLE bike(
 CREATE TABLE customer(
     id INT AUTO_INCREMENT,
     customer_name VARCHAR(20),
-    email VARCHAR(20) UNIQUE,
-    phone INT UNIQUE,
+    email VARCHAR(50) UNIQUE,
+    phone VARCHAR(20) UNIQUE,
     id_city INT,
     CONSTRAINT pk_id_customer PRIMARY KEY (id),
     CONSTRAINT fk_id_city FOREIGN KEY (id_city) REFERENCES city(id)
@@ -58,7 +58,7 @@ CREATE TABLE sale(
     total DOUBLE,
     CONSTRAINT pk_id_sale PRIMARY KEY (id),
     CONSTRAINT fk_id_customer FOREIGN KEY (id_customer) REFERENCES customer(id),
-    CONSTRAINT chk_total CHECK (total>0)
+    CON STRAINT chk_total CHECK (total>0)
 );
 
 CREATE TABLE sale_detail(

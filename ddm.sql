@@ -33,12 +33,12 @@ INSERT INTO bike (id_bike_model, id_bike_brand , price, stock) VALUES
 (4, 4, 2000.00, 8),
 (5, 5, 2200.00, 6);
 
-INSERT INTO customer (customer_name, email, phone, id_city) VALUES 
-('Juan Pérez', 'juan.perez@gmail.com', 3001234567, 1),
-('María García', 'maria.garcia@hotmail.com', 3002345678, 2),
-('Carlos López', 'carlos.lopez@outlook.com', 3003456789, 3),
-('Ana Martínez', 'ana.martinez@yahoo.com', 3004567890, 4),
-('Luis Rodríguez', 'luis.rodriguez@gmail.com', 3005678901, 5);
+INSERT INTO customer (id,customer_name, email, phone, id_city) VALUES 
+(1,'Juan Pérez', 'juan.perez@hotmail.com', 3001233567, 1);
+(2,'María García', 'maria.garcia@hotmail.com', 3002345678, 2),
+(3,'Carlos López', 'carlos.lopez@outlook.com', 3003456789, 3),
+(4,'Ana Martínez', 'ana.martinez@yahoo.com', 3004567890, 4),
+(5,'Luis Rodríguez', 'luis.rodriguez@gmail.com', 3005678901, 5);
 
 INSERT INTO supplier (supplier_name, contact_name, phone, email, id_city) VALUES 
 ('Supplier A', 'Contact A', 3001112222, 'contacta@suppliera.com', 1),
