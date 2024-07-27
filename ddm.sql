@@ -34,7 +34,7 @@ INSERT INTO bike (id_bike_model, id_bike_brand , price, stock) VALUES
 (5, 5, 2200.00, 6);
 
 INSERT INTO customer (id,customer_name, email, phone, id_city) VALUES 
-(1,'Juan Pérez', 'juan.perez@hotmail.com', 3001233567, 1);
+(1,'Juan Pérez', 'juan.perez@hotmail.com', 3001233567, 1),
 (2,'María García', 'maria.garcia@hotmail.com', 3002345678, 2),
 (3,'Carlos López', 'carlos.lopez@outlook.com', 3003456789, 3),
 (4,'Ana Martínez', 'ana.martinez@yahoo.com', 3004567890, 4),
@@ -68,12 +68,12 @@ INSERT INTO purchase_detail (id_purchase, id_replacement, amount, unit_price) VA
 (4, 4, 10, 40.00),
 (5, 5, 5, 100.00);
 
-INSERT INTO sale (sale_date, id_customer, total) VALUES 
-('2023-07-10', 1, 1500.00),
-('2023-07-11', 2, 2500.00),
-('2023-07-12', 3, 1800.00),
-('2023-07-13', 4, 2000.00),
-('2023-07-14', 5, 2200.00);
+INSERT INTO sale (id,sale_date, id_customer, total) VALUES 
+(1,'2023-07-10', 1, 1500.00),
+(2,'2023-07-11', 2, 2500.00),
+(3,'2023-07-12', 3, 1800.00),
+(4,'2023-07-13', 4, 2000.00),
+(5,'2023-07-14', 5, 2200.00);
 
 INSERT INTO sale_detail (id_sale, id_bike, amount, unit_price) VALUES 
 (1, 1, 1, 1500.00),

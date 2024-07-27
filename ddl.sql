@@ -1,3 +1,4 @@
+DROP DATABASE IF EXIST campusbike;
 CREATE DATABASE campusbike;
 USE campusbike;
 
@@ -58,7 +59,7 @@ CREATE TABLE sale(
     total DOUBLE,
     CONSTRAINT pk_id_sale PRIMARY KEY (id),
     CONSTRAINT fk_id_customer FOREIGN KEY (id_customer) REFERENCES customer(id),
-    CON STRAINT chk_total CHECK (total>0)
+    CONSTRAINT chk_total CHECK (total>0)
 );
 
 CREATE TABLE sale_detail(
