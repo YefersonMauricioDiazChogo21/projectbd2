@@ -279,9 +279,70 @@ Administrador
 ##### Flujo Principal:
 
 1. El usuario ingresa al sistema.
+
 2. El usuario selecciona la opción para consultar las bicicletas más vendidas por marca.
+
+    ```sql
+    SELECT 
+        bb.brand_name,
+        bm.model_name,
+        SUM(sd.amount) AS total_sales
+    FROM 
+        bike b
+    JOIN 
+        sale_detail sd ON b.id = sd.id_bike
+    JOIN 
+        bike_model bm ON b.id_bike_model = bm.id
+    JOIN 
+        bike_brand bb ON bm.id_bike_brand = bb.id
+    GROUP BY 
+        bb.brand_name, bm.model_name
+    HAVING 
+        SUM(sd.amount) = (
+            SELECT 
+                MAX(subquery.total)
+            FROM (
+                SELECT 
+                    SUM(sd2.amount) AS total, 
+                    bb2.brand_name AS brand_name
+                FROM 
+                    bike b2
+                JOIN 
+                    sale_detail sd2 ON b2.id = sd2.id_bike
+                JOIN 
+                    bike_model bm2 ON b2.id_bike_model = bm2.id
+                JOIN 
+                    bike_brand bb2 ON bm2.id_bike_brand = bb2.id
+                GROUP BY 
+                    bb2.brand_name, bm2.model_name
+            ) AS subquery
+            WHERE 
+                subquery.brand_name = bb.brand_name
+        )
+    ORDER BY 
+        total_sales DESC;
+            
+    
+    ```
+
+    
+
 3. El sistema muestra una lista de marcas y el modelo de bicicleta más vendido para cada
     marca.
+
+    ```sql
+    +-------------+-------------+-------------+
+    | brand_name  | model_name  | total_sales |
+    +-------------+-------------+-------------+
+    | Trek        | Domane      |           1 |
+    | Specialized | Stumpjumper |           1 |
+    | Cannondale  | Synapse     |           1 |
+    | Giant       | Defy        |           1 |
+    | Scott       | Spark       |           1 |
+    +-------------+-------------+-------------+
+    ```
+
+    
 
 ### Caso de Uso 7: Clientes con Mayor Gasto en un Año Específico
 
@@ -295,11 +356,47 @@ Administrador
 ##### Flujo Principal:
 
 1. El administrador ingresa al sistema.
+
 2. El administrador selecciona la opción para consultar los clientes con mayor gasto en un año
     específico.
+
 3. El administrador ingresa el año deseado.
+
+    ```sql
+    SELECT
+        c.customer_name,
+        SUM(s.total) AS total_spent
+    FROM
+        customer c
+    JOIN
+        sale s ON c.id = s.id_customer
+    WHERE
+        YEAR(s.sale_date) = 2023
+    GROUP BY
+        c.customer_name
+    ORDER BY
+        total_spent DESC
+    ```
+
+    
+
 4. El sistema muestra una lista de los clientes que han gastado más en ese año, ordenados por
     total gastado.
+
+    ```sql
+    +-----------------+-------------+
+    | customer_name   | total_spent |
+    +-----------------+-------------+
+    | María García    |        2500 |
+    | Luis Rodríguez  |        2200 |
+    | Ana Martínez    |        2000 |
+    | Carlos López    |        1800 |
+    | Juan Pérez      |        1500 |
+    +-----------------+-------------+
+    
+    ```
+
+    
 
 ### Caso de Uso 8: Proveedores con Más Compras en el Último Mes
 
@@ -313,10 +410,46 @@ Administrador de Compras
 ##### Flujo Principal:
 
 1. El administrador de compras ingresa al sistema.
+
 2. El administrador selecciona la opción para consultar los proveedores con más compras en el
     último mes.
+
+    ```sql
+    SELECT
+        s.supplier_name,
+        COUNT(p.id) AS num_purchases_last_month
+    FROM
+        supplier s
+    JOIN
+        purchase p ON s.id = p.id_supplier
+    WHERE
+        YEAR(p.purchase_date) = YEAR(CURDATE() - INTERVAL 1 MONTH) AND
+        MONTH(p.purchase_date) = MONTH(CURDATE() - INTERVAL 1 MONTH)
+    GROUP BY
+        s.supplier_name
+    ORDER BY
+        num_purchases_last_month DESC;
+    
+    ```
+
+    
+
 3. El sistema muestra una lista de proveedores ordenados por el número de compras recibidas
     en el último mes.
+
+    ```sql
+    +---------------+--------------------------+
+    | supplier_name | num_purchases_last_month |
+    +---------------+--------------------------+
+    | Supplier A    |                        1 |
+    | Supplier B    |                        1 |
+    | Supplier C    |                        1 |
+    | Supplier D    |                        1 |
+    | Supplier E    |                        1 |
+    +---------------+--------------------------+
+    ```
+
+    
 
 ### Caso de Uso 9: Repuestos con Menor Rotación en el Inventario
 
@@ -348,7 +481,8 @@ Administrador
 1. El administrador ingresa al sistema.
 2. El administrador selecciona la opción para consultar las ciudades con más ventas realizadas.
 3. El sistema muestra una lista de ciudades ordenadas por la cantidad de ventas realizadas.
-    Casos de Uso con Joins
+
+## Casos de Uso con Joins
 
 ### Caso de Uso 11: Consulta de Ventas por Ciudad
 
@@ -651,11 +785,11 @@ Administrador
 
 1. El administrador ingresa al sistema.
 2. El administrador selecciona la opción para contar el número de ventas en un rango de
-  fechas.
+    fechas.
 3. El administrador ingresa las fechas de inicio y fin.
 4. El sistema llama a un procedimiento almacenado para contar las ventas.
 5. El procedimiento almacenado devuelve el número de ventas en el rango de fechas
-  especificado.
+    especificado.
 
 ### Caso de Uso 4: Calcular el Total de Repuestos Comprados por Proveedor
 
@@ -670,11 +804,11 @@ Administrador de Compras
 
 1. El administrador de compras ingresa al sistema.
 2. El administrador selecciona la opción para calcular el total de repuestos comprados por
-  proveedor.
+    proveedor.
 3. El administrador ingresa el ID del proveedor.
 4. El sistema llama a un procedimiento almacenado para calcular el total de repuestos.
 5. El procedimiento almacenado devuelve el total de repuestos comprados al proveedor
-  especificado.
+    especificado.
 
 ### Caso de Uso 5: Calcular el Ingreso Total por Año
 
@@ -709,7 +843,7 @@ Administrador
 3. El administrador ingresa el mes y el año.
 4. El sistema llama a un procedimiento almacenado para contar los clientes activos.
 5. El procedimiento almacenado devuelve el número de clientes que han realizado compras en
-  el mes especificado.
+    el mes especificado.
 
 ### Caso de Uso 7: Calcular el Promedio de Compras por Proveedor
 
@@ -775,7 +909,7 @@ Administrador de Compras
 2. El administrador selecciona la opción para contar el número de repuestos por proveedor.
 3. El sistema llama a un procedimiento almacenado para contar los repuestos.
 4. El procedimiento almacenado devuelve el número de repuestos suministrados por cada
-  proveedor.
+    proveedor.
 
 ### Caso de Uso 11: Calcular el Total de Ingresos por Cliente
 
@@ -807,7 +941,7 @@ Administrador
 1. El administrador ingresa al sistema.
 2. El administrador selecciona la opción para calcular el promedio de compras mensuales.
 3. El sistema llama a un procedimiento almacenado para calcular el promedio de compras
-  mensuales.
+    mensuales.
 4. El procedimiento almacenado devuelve el promedio de compras realizadas mensualmente.
 
 ### Caso de Uso 13: Calcular el Total de Ventas por Día de la Semana
@@ -839,7 +973,7 @@ Administrador
 
 1. El administrador ingresa al sistema.
 2. El administrador selecciona la opción para contar el número de ventas por categoría de
-  bicicleta.
+    bicicleta.
 3. El sistema llama a un procedimiento almacenado para contar las ventas.
 4. El procedimiento almacenado devuelve el número de ventas por categoría de bicicleta.
 

@@ -1,4 +1,4 @@
-DROP DATABASE IF EXIST campusbike;
+DROP DATABASE IF EXISTS campusbike;
 CREATE DATABASE campusbike;
 USE campusbike;
 
