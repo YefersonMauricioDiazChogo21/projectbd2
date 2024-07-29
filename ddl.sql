@@ -9,6 +9,7 @@ CREATE TABLE country(
 );
 
 CREATE TABLE city(
+    
     id INT AUTO_INCREMENT,
     name_city VARCHAR(20),
     id_country INT,
