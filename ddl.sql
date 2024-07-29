@@ -3,9 +3,9 @@ CREATE DATABASE campusbike;
 USE campusbike;
 
 CREATE TABLE country(
-    i_country VARCHAR(20),
-    CONSTRAINT d INT AUTO_INCREMENT,
-    namepk_id_country PRIMARY KEY (id)
+    id_country INT AUTO_INCREMENT,,
+    name_country VARCHAR(20),
+    CONSTRAINT pk_id_country PRIMARY KEY (id)
 );
 
 CREATE TABLE city(

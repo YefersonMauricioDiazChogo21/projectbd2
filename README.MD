@@ -521,7 +521,11 @@ Administrador de Compras
 2. El administrador selecciona la opción para consultar los proveedores por país.
 
    ```sql
-   
+   SELECT s.supplier_name AS Supplier, c.name_country AS Country
+   FROM supplier s
+   JOIN city ci ON s.id_city = ci.id
+   JOIN country c ON ci.id_country = c.id
+   ORDER BY c.name_country DESC;
    ```
 
 3. El sistema muestra una lista de países con los proveedores en cada país.
