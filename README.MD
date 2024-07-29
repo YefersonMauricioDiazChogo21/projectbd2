@@ -432,8 +432,6 @@ Administrador de Compras
     
     ```
 
-    
-
 3. El sistema muestra una lista de proveedores ordenados por el número de compras recibidas
     en el último mes.
 
@@ -449,7 +447,6 @@ Administrador de Compras
     +---------------+--------------------------+
     ```
 
-    
 
 ### Caso de Uso 9: Repuestos con Menor Rotación en el Inventario
 
@@ -520,7 +517,13 @@ Administrador de Compras
 ##### Flujo Principal:
 
 1. El administrador de compras ingresa al sistema.
+
 2. El administrador selecciona la opción para consultar los proveedores por país.
+
+   ```sql
+   
+   ```
+
 3. El sistema muestra una lista de países con los proveedores en cada país.
 
 ### Caso de Uso 13: Compras de Repuestos por Proveedor
@@ -535,8 +538,18 @@ Administrador de Compras
 ##### Flujo Principal:
 
 1. El administrador de compras ingresa al sistema.
+
 2. El administrador selecciona la opción para consultar las compras de repuestos por
     proveedor.
+
+    ```sql
+    SELECT s.supplier_name AS Supplier, SUM(pd.amount) AS "Total"
+    FROM purchase_detail pd
+    JOIN purchase p ON  p.id = pd.id_purchase
+    JOIN supplier s ON s.id = p.id_supplier
+    GROUP BY p.id_supplier;
+    ```
+
 3. El sistema muestra una lista de proveedores con el total de repuestos comprados a cada
     uno.
 
@@ -553,8 +566,18 @@ Administrador
 ##### Flujo Principal:
 
 1. El usuario ingresa al sistema.
+
 2. El usuario selecciona la opción para consultar los clientes con ventas en un rango de fechas.
+
+    ```SQL
+    SELECT DISTINCT c.customer_name AS "Name"
+    FROM  customer c
+    JOIN sale s ON c.id = s.id_customer
+    WHERE s.sale_date BETWEEN '2023-07-10' AND '2023-07-12';
+    ```
+
 3. El usuario ingresa las fechas de inicio y fin del rango.
+
 4. El sistema muestra una lista de clientes que han realizado compras dentro del rango de
     fechas especificado.
 
@@ -734,12 +757,17 @@ Administrador de Compras
 4. El procedimiento almacenado obtiene las compras y los detalles de las compras realizadas al
     proveedor.
 
-Caso de Uso 11: Calculadora de Descuentos en Ventas
-Descripción: Este caso de uso describe cómo el sistema aplica un descuento a una venta antes de
-registrar los detalles de la venta.
-Actores:
+### Caso de Uso 11: Calculadora de Descuentos en Ventas
+
+**Descripción: Este caso de uso describe cómo el sistema aplica un descuento a una venta antes de**
+**registrar los detalles de la venta.**
+
+##### Actores:
+
 Vendedor
-Flujo Principal:
+
+##### Flujo Principal:
+
 1. El vendedor ingresa al sistema.
 2. El vendedor aplica un descuento a una venta.
 3. El sistema llama a un procedimiento almacenado para calcular el total con descuento.
@@ -869,12 +897,42 @@ Administrador
 ##### Flujo Principal:
 
 1. El administrador ingresa al sistema.
+
 2. El administrador selecciona la opción para contar el número de ventas en un rango de
     fechas.
+
+    ```sql
+    CALL saleRangeDate('2023-07-10','2023-07-13');
+    ```
+
 3. El administrador ingresa las fechas de inicio y fin.
+
 4. El sistema llama a un procedimiento almacenado para contar las ventas.
+
+    ```sql
+    DELIMITER $$
+    CREATE PROCEDURE saleRangeDate(
+        IN inInitDate DATE, 
+        IN inEndDate DATE
+    )
+    BEGIN
+        SELECT COUNT(s.id) AS "Total Sales"
+        FROM sale s
+        WHERE s.sale_date BETWEEN inInitDate AND inEndDate;
+    END$$
+    DELIMITER ;
+    ```
+
 5. El procedimiento almacenado devuelve el número de ventas en el rango de fechas
     especificado.
+
+    ```sql
+    +-------------+
+    | Total Sales |
+    +-------------+
+    |           4 |
+    +-------------+
+    ```
 
 ### Caso de Uso 4: Calcular el Total de Repuestos Comprados por Proveedor
 
@@ -888,12 +946,45 @@ Administrador de Compras
 ##### Flujo Principal:
 
 1. El administrador de compras ingresa al sistema.
+
 2. El administrador selecciona la opción para calcular el total de repuestos comprados por
     proveedor.
+
+    ```sql
+    CALL sumReplacementPerProvider(2);
+    ```
+
 3. El administrador ingresa el ID del proveedor.
+
 4. El sistema llama a un procedimiento almacenado para calcular el total de repuestos.
+
+    ```sql
+    DELIMITER $$
+    CREATE PROCEDURE sumReplacementPerProvider(
+    	IN inIdProvider INT
+    )
+    BEGIN
+    	SELECT
+    		SUM(pd.amount) AS "Total Replacemet By Provider"
+    	FROM 
+    		purchase p
+    	JOIN purchase_detail pd ON p.id=pd.id_purchase
+    	WHERE p.id= inIdProvider
+    	GROUP BY p.total;
+    END $$
+    DELIMITER ;
+    ```
+
 5. El procedimiento almacenado devuelve el total de repuestos comprados al proveedor
     especificado.
+
+    ```sql
+    +------------------------------+
+    | Total Replacemet By Provider |
+    +------------------------------+
+    |                           50 |
+    +------------------------------+
+    ```
 
 ### Caso de Uso 5: Calcular el Ingreso Total por Año
 
@@ -907,14 +998,46 @@ Administrador
 ##### Flujo Principal:
 
 1. El administrador ingresa al sistema.
+
 2. El administrador selecciona la opción para calcular el ingreso total por año.
+
+   ```sql
+   CALL sellPerTYear(2023);
+   ```
+
 3. El administrador ingresa el año.
+
 4. El sistema llama a un procedimiento almacenado para calcular el ingreso total.
+
+   ```SQL
+   DELIMITER $$
+   CREATE PROCEDURE sellPerTYear(
+   	IN inYear INT
+   )
+   BEGIN
+   	SELECT
+   		YEAR(s.sale_date) AS Year,
+   		SUM(s.total) AS "Total Per Year"
+   	FROM sale s
+   	WHERE YEAR(s.sale_date) = inYear
+   	GROUP BY YEAR(s.sale_date);
+   END$$
+   DELIMITER ;
+   ```
+
 5. El procedimiento almacenado devuelve el ingreso total del año especificado.
+
+   ```SQL
+   +------+----------------+
+   | Year | Total Per Year |
+   +------+----------------+
+   | 2023 |          10000 |
+   +------+----------------+
+   ```
 
 ### Caso de Uso 6: Calcular el Número de Clientes Activos en un Mes
 
-Descripción: Este caso de uso describe cómo el sistema cuenta el número de clientes que han
+**Descripción: Este caso de uso describe cómo el sistema cuenta el número de clientes que han**
 **realizado al menos una compra en un mes es pecífico.**
 
 ##### Actores:
@@ -924,11 +1047,43 @@ Administrador
 ##### Flujo Principal:
 
 1. El administrador ingresa al sistema.
+
 2. El administrador selecciona la opción para contar el número de clientes activos en un mes.
+
+    ```sql
+    CALL activeCustomerPerMonth(2023,07);
+    ```
+
 3. El administrador ingresa el mes y el año.
+
 4. El sistema llama a un procedimiento almacenado para contar los clientes activos.
+
+    ```sql
+    DELIMITER $$
+    CREATE PROCEDURE activeCustomerPerMonth(
+    	IN inYear INT,
+        IN inMonth INT
+    )
+    BEGIN
+    	SELECT
+    		COUNT(DISTINCT s.id_customer) AS "Active Customers"
+    	FROM 
+    		sale s
+    	WHERE YEAR(s.sale_date)= inYear AND MONTH(s.sale_date)=inMonth;
+    END$$
+    DELIMITER ;
+    ```
+
 5. El procedimiento almacenado devuelve el número de clientes que han realizado compras en
     el mes especificado.
+
+    ```sql
+    +------------------+
+    | Active Customers |
+    +------------------+
+    |                5 |
+    +------------------+
+    ```
 
 ### Caso de Uso 7: Calcular el Promedio de Compras por Proveedor
 
@@ -942,10 +1097,42 @@ Administrador de Compras
 ##### Flujo Principal:
 
 1. El administrador de compras ingresa al sistema.
+
 2. El administrador selecciona la opción para calcular el promedio de compras por proveedor.
+
+   ```sql
+   CALL avgSaleProvider(1);
+   ```
+
 3. El administrador ingresa el ID del proveedor.
+
 4. El sistema llama a un procedimiento almacenado para calcular el promedio de compras.
+
+   ```sql
+   DELIMITER $$
+   CREATE PROCEDURE avgSaleProvider(
+   	IN inIdProvider INT
+   )
+   BEGIN
+   	SELECT
+   		AVG(p.total) AS "AVG Total"
+   	FROM 
+   		purchase p
+   	WHERE p.id= inIdProvider
+   	GROUP BY p.total;
+   END $$
+   DELIMITER ;
+   ```
+
 5. El procedimiento almacenado devuelve el promedio de compras del proveedor especificado.
+
+   ```sql
+   +-----------+
+   | AVG Total |
+   +-----------+
+   |      1000 |
+   +-----------+
+   ```
 
 ### Caso de Uso 8: Calcular el Total de Ventas por Marca
 
@@ -959,9 +1146,43 @@ Administrador
 ##### Flujo Principal:
 
 1. El administrador ingresa al sistema.
+
 2. El administrador selecciona la opción para calcular el total de ventas por marca.
+
+   ```sql
+   CALL sellByBrand();
+   ```
+
 3. El sistema llama a un procedimiento almacenado para calcular el total de ventas por marca.
+
+   ```sql
+   DELIMITER $$
+   CREATE PROCEDURE sellByBrand()
+   BEGIN
+       SELECT 
+           bb.brand_name AS "Name Brand", 
+           SUM(sd.amount * b.price) AS "Total By Brand"
+       FROM sale_detail sd
+       JOIN bike b ON sd.id_bike = b.id
+       JOIN bike_brand bb ON bb.id = b.id_bike_brand
+       GROUP BY bb.brand_name;
+   END$$
+   DELIMITER ;
+   ```
+
 4. El procedimiento almacenado devuelve el total de ventas agrupadas por marca.
+
+   ```sql
+   +-------------+----------------+
+   | Name Brand  | Total By Brand |
+   +-------------+----------------+
+   | Trek        |           1500 |
+   | Specialized |           2500 |
+   | Cannondale  |           1800 |
+   | Giant       |           2000 |
+   | Scott       |           2200 |
+   +-------------+----------------+
+   ```
 
 ### Caso de Uso 9: Calcular el Promedio de Precios de Bicicletas por Marca
 
@@ -975,9 +1196,47 @@ Administrador
 ##### Flujo Principal:
 
 1. El administrador ingresa al sistema.
+
 2. El administrador selecciona la opción para calcular el promedio de precios por marca.
+
+   ```sql
+   CALL priceBikeBrand();
+   ```
+
 3. El sistema llama a un procedimiento almacenado para calcular el promedio de precios.
+
+   ```sql
+   DELIMITER $$
+   CREATE PROCEDURE avgPriceBikeBrand()
+   BEGIN
+   	SELECT 
+           bb.brand_name AS "Brand Name",
+           AVG(b.price) AS "AVG Price"
+       FROM 
+           bike b
+       JOIN 
+           bike_model bm ON b.id_bike_model = bm.id
+       JOIN 
+           bike_brand bb ON bm.id_bike_brand = bb.id
+       GROUP BY 
+           bb.brand_name;
+   END $$
+   DELIMITER ;
+   ```
+
 4. El procedimiento almacenado devuelve el promedio de precios agrupadas por marca.
+
+   ```sql
+   +-------------+---------------+
+   | brand_name  | average_price |
+   +-------------+---------------+
+   | Trek        |          1500 |
+   | Specialized |          2500 |
+   | Cannondale  |          1800 |
+   | Giant       |          2000 |
+   | Scott       |          2200 |
+   +-------------+---------------+
+   ```
 
 ### Caso de Uso 10: Contar el Número de Repuestos por Proveedor
 
