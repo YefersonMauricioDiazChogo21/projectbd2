@@ -496,7 +496,16 @@ Administrador
 ##### Flujo Principal:
 
 1. El administrador ingresa al sistema.
+
 2. El administrador selecciona la opción para consultar las ventas por ciudad.
+
+   ```sql
+   SELECT 
+   	
+   ```
+
+   
+
 3. El sistema muestra una lista de ciudades con el total de ventas realizadas en cada una.
 
 ### Caso de Uso 12: Consulta de Proveedores por País
@@ -750,10 +759,45 @@ Administrador
 ##### Flujo Principal:
 
 1. El administrador ingresa al sistema.
+
 2. El administrador selecciona la opción para calcular el total de ventas mensuales.
+
 3. El administrador ingresa el mes y el año.
+
+   ```sql
+   CALL totalSalesForMonth(07,2023);
+   ```
+
 4. El sistema llama a un procedimiento almacenado para calcular el total de ventas.
+
+   ```sql
+   DELIMITER $$
+   CREATE PROCEDURE totalSalesForMonth(
+       IN inMonth INT,
+       IN inYear INT
+   )
+   BEGIN
+       DECLARE total_sales DOUBLE DEFAULT 0;
+       SELECT 
+           SUM(total) 
+       INTO 
+           total_sales
+       FROM 
+           sale
+       WHERE 
+           MONTH(sale_date) = inMonth
+           AND YEAR(sale_date) = inYear;
+       SELECT total_sales AS "Total Sales For Month";
+   END $$
+   
+   DELIMITER ;
+   ```
+
 5. El procedimiento almacenado devuelve el total de ventas del mes especificado.
+
+   ```sql
+   
+   ```
 
 ### Caso de Uso 2: Calcular el Promedio de Ventas por Cliente
 
@@ -767,10 +811,51 @@ Administrador
 #####   Flujo Principal:
 
 1. El administrador ingresa al sistema.
+
 2. El administrador selecciona la opción para calcular el promedio de ventas por cliente.
+
+   ```sql
+   CALL avgSalesByCustomer(1);
+   ```
+
 3. El administrador ingresa el ID del cliente.
+
 4. El sistema llama a un procedimiento almacenado para calcular el promedio de ventas.
+
+   ```sql
+   DELIMITER $$
+   CREATE PROCEDURE avgSalesByCustomer(
+       IN inId INT
+   )
+   BEGIN
+       DECLARE avg_sales DOUBLE DEFAULT 0;
+       SELECT 
+           AVG(total) 
+       INTO 
+           avg_sales
+       FROM 
+           sale
+       WHERE 
+           id_customer = inId;
+       SELECT avg_sales AS "AVG sales";
+   END $$
+   
+   DELIMITER ;
+   ```
+
+   
+
 5. El procedimiento almacenado devuelve el promedio de ventas del cliente especificado.
+
+   ```sql
+   +-----------+
+   | AVG sales |
+   +-----------+
+   |      1500 |
+   +-----------+
+   ```
+
+   
 
 ### Caso de Uso 3: Contar el Número de Ventas Realizadas en un Rango de fechas
 
@@ -906,10 +991,47 @@ Administrador de Compras
 ##### Flujo Principal:
 
 1. El administrador de compras ingresa al sistema.
+
 2. El administrador selecciona la opción para contar el número de repuestos por proveedor.
+
+    ```sql
+    CALL totalReplacementBySupplier();
+    ```
+
 3. El sistema llama a un procedimiento almacenado para contar los repuestos.
+
+    ```sql
+    DELIMITER $$
+    CREATE PROCEDURE totalReplacementBySupplier()
+    BEGIN
+    	SELECT 
+            s.id AS supplier_id,
+            s.supplier_name AS "Supplier Name",
+            COUNT(r.id) AS "Replacement Count"
+        FROM 
+            supplier s
+        JOIN 
+            replacement r ON s.id = r.id_supplier
+        GROUP BY 
+            s.id, s.supplier_name;
+    END $$
+    DELIMITER ;
+    ```
+
 4. El procedimiento almacenado devuelve el número de repuestos suministrados por cada
     proveedor.
+
+    ```sql
+    +-------------+---------------+-------------------+
+    | supplier_id | supplier_name | replacement_count |
+    +-------------+---------------+-------------------+
+    |           1 | Supplier A    |                 1 |
+    |           2 | Supplier B    |                 1 |
+    |           3 | Supplier C    |                 1 |
+    |           4 | Supplier D    |                 1 |
+    |           5 | Supplier E    |                 1 |
+    +-------------+---------------+-------------------+
+    ```
 
 ### Caso de Uso 11: Calcular el Total de Ingresos por Cliente
 
@@ -923,9 +1045,46 @@ Administrador
 ##### Flujo Principal:
 
 1. El administrador ingresa al sistema.
+
 2. El administrador selecciona la opción para calcular el total de ingresos por cliente.
+
+   ```sql
+   CALL incomeCustomer();
+   ```
+
 3. El sistema llama a un procedimiento almacenado para calcular el total de ingresos.
+
+   ```sql
+   DELIMITER $$
+   CREATE PROCEDURE incomeCustomer()
+   BEGIN
+   	SELECT 
+           c.id AS customer_id,
+           c.customer_name,
+           SUM(s.total) AS "Total Income"
+       FROM 
+           customer c
+       JOIN 
+           sale s ON c.id = s.id_customer
+       GROUP BY 
+           c.id, c.customer_name;
+   END $$
+   DELIMITER ;
+   ```
+
 4. El procedimiento almacenado devuelve el total de ingresos generados por cada cliente.
+
+   ```sql
+   +-------------+-----------------+--------------+
+   | customer_id | customer_name   | total_income |
+   +-------------+-----------------+--------------+
+   |           1 | Juan Pérez      |         1500 |
+   |           2 | María García    |         2500 |
+   |           3 | Carlos López    |         1800 |
+   |           4 | Ana Martínez    |         2000 |
+   |           5 | Luis Rodríguez  |         2200 |
+   +-------------+-----------------+--------------+
+   ```
 
 ### Caso de Uso 12: Calcular el Promedio de Compras Mensuales
 
@@ -939,10 +1098,39 @@ Administrador
 ##### Flujo Principal:
 
 1. El administrador ingresa al sistema.
+
 2. El administrador selecciona la opción para calcular el promedio de compras mensuales.
+
+    ```sql
+    call avgSaleMonth();
+    ```
+
 3. El sistema llama a un procedimiento almacenado para calcular el promedio de compras
     mensuales.
+
+    ```sql
+    DELIMITER $$
+    CREATE PROCEDURE avgSaleMonth()
+    BEGIN
+        SELECT 
+            YEAR(s.sale_date) AS Year, 
+            MONTH(s.sale_date) AS Month, 
+            TRUNCATE((AVG(s.total)),2) AS "Avg"
+        FROM sale s
+        GROUP BY YEAR(s.sale_date), MONTH(s.sale_date);
+    END $$
+    DELIMITER ;
+    ```
+
 4. El procedimiento almacenado devuelve el promedio de compras realizadas mensualmente.
+
+    ```sql
+    +------+-------+------+
+    | Year | Month | Avg  |
+    +------+-------+------+
+    | 2023 |     7 | 2000 |
+    +------+-------+------+
+    ```
 
 ### Caso de Uso 13: Calcular el Total de Ventas por Día de la Semana
 
@@ -956,9 +1144,40 @@ Administrador
 ##### Flujo Principal:
 
 1. El administrador ingresa al sistema.
+
 2. El administrador selecciona la opción para calcular el total de ventas por día de la semana.
+
+   ```sql
+   CALL totalSaleDay(10);
+   ```
+
 3. El sistema llama a un procedimiento almacenado para calcular el total de ventas.
+
+   ```sql
+   DELIMITER $$
+   CREATE PROCEDURE totalSaleDay(
+       IN inDay INT
+   )
+   BEGIN
+       SELECT 
+           DAY(s.sale_date) AS Day, 
+           SUM(s.total) AS "Total Sale"
+       FROM sale s
+       WHERE DAY(s.sale_date) = inDay
+       GROUP BY DAY(s.sale_date);
+   END $$
+   DELIMITER ;
+   ```
+
 4. El procedimiento almacenado devuelve el total de ventas agrupadas por día de la semana.
+
+   ```sql
+   +------+------------+
+   | Day  | Total Sale |
+   +------+------------+
+   |   10 |       1500 |
+   +------+------------+
+   ```
 
 ### Caso de Uso 14: Contar el Número de Ventas por Categoría de Bicicleta
 
@@ -972,10 +1191,46 @@ Administrador
 ##### Flujo Principal:
 
 1. El administrador ingresa al sistema.
+
 2. El administrador selecciona la opción para contar el número de ventas por categoría de
     bicicleta.
+
+    ```sql
+    call saleBrandBike(1);
+    ```
+
 3. El sistema llama a un procedimiento almacenado para contar las ventas.
+
+    ```sql
+    DELIMITER $$
+    CREATE PROCEDURE saleBrandBike(
+        IN inIdBike INT
+    )
+    BEGIN
+        SELECT 
+            sd.id, 
+            SUM(sd.amount) AS Amount, 
+            sd.unit_price AS "Unit price"
+        FROM sale_detail sd
+        WHERE sd.id = inIdBike
+        GROUP BY sd.id, sd.unit_price;
+    END$$
+    DELIMITER ;
+    ```
+
+    
+
 4. El procedimiento almacenado devuelve el número de ventas por categoría de bicicleta.
+
+    ```sql
+    +----+--------+------------+
+    | id | Amount | unit_price |
+    +----+--------+------------+
+    |  1 |      1 |       1500 |
+    +----+--------+------------+
+    ```
+
+    
 
 ### Caso de Uso 15: Calcular el Total de Ventas por Año y Mes
 
@@ -989,6 +1244,39 @@ Administrador
 ##### Flujo Principal:
 
 1. El administrador ingresa al sistema.
+
 2. El administrador selecciona la opción para calcular el total de ventas por año y mes.
+
+   ```sql
+   CALL totalSellYearM(7,2023);
+   ```
+
 3. El sistema llama a un procedimiento almacenado para calcular el total de ventas.
+
+   ```sql
+   DELIMITER $$
+   CREATE PROCEDURE totalSellYearM(
+       IN inMonth INT,
+       IN inYear INT
+   )
+   BEGIN 
+       SELECT  
+           SUM(s.total) AS total
+       FROM sale s
+       WHERE (MONTH(s.sale_date) = inMonth) AND (YEAR(s.sale_date) = inYear)
+       GROUP BY MONTH(s.sale_date), YEAR(s.sale_date);
+   END$$
+   DELIMITER ;
+   ```
+
+   
+
 4. El procedimiento almacenado devuelve el total de ventas agrupadas por año y mes.
+
+```sql
++-------+
+| total |
++-------+
+| 10000 |
++-------+
+```
