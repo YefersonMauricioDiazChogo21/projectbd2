@@ -3,13 +3,12 @@ CREATE DATABASE campusbike;
 USE campusbike;
 
 CREATE TABLE country(
-    id_country INT AUTO_INCREMENT,,
+    id INT AUTO_INCREMENT,
     name_country VARCHAR(20),
     CONSTRAINT pk_id_country PRIMARY KEY (id)
 );
 
 CREATE TABLE city(
-    
     id INT AUTO_INCREMENT,
     name_city VARCHAR(20),
     id_country INT,

@@ -460,7 +460,15 @@ Administrador de Inventario
 ##### Flujo Principal:
 
 1. El administrador de inventario ingresa al sistema.
+
 2. El administrador selecciona la opción para consultar los repuestos con menor rotación.
+
+    ```sql
+    
+    ```
+
+    
+
 3. El sistema muestra una lista de repuestos ordenados por la cantidad vendida, de menor a
     mayor.
 
@@ -476,7 +484,30 @@ Administrador
 ##### Flujo Principal:
 
 1. El administrador ingresa al sistema.
+
 2. El administrador selecciona la opción para consultar las ciudades con más ventas realizadas.
+
+   ```sql
+   SELECT 
+       ci.name_city AS City,
+       sc.sales
+   FROM 
+       city ci
+   JOIN 
+       (SELECT 
+           c.id_city,
+           COUNT(s.id) AS sales
+        FROM 
+           sale s
+        JOIN 
+           customer c ON s.id_customer = c.id
+        GROUP BY 
+           c.id_city
+       ) sc ON ci.id = sc.id_city
+   ORDER BY 
+       sc.sales DESC;
+   ```
+
 3. El sistema muestra una lista de ciudades ordenadas por la cantidad de ventas realizadas.
 
 ## Casos de Uso con Joins
@@ -497,11 +528,12 @@ Administrador
 2. El administrador selecciona la opción para consultar las ventas por ciudad.
 
    ```sql
-   SELECT 
-   	
+   SELECT ci.name_city, SUM(s.total) AS "Total"
+   FROM city ci
+   JOIN customer c ON ci.id = c.id_city
+   JOIN sale s ON c.id = s.id_customer
+   GROUP BY ci.name_city, c.id_city;
    ```
-
-   
 
 3. El sistema muestra una lista de ciudades con el total de ventas realizadas en cada una.
 
@@ -602,14 +634,36 @@ Vendedor
 
 2. El vendedor registra una venta de bicicletas.
 
+    ```sql
+    INSERT INTO sale (id,sale_date,id_customer,total) VALUES (7,'2024-02-21',2,0);
+    
+    INSERT INTO sale_detail (id,id_sale,id_bike,amount,unit_price) VALUES (7,7,3,1,1800);
+    ```
+
 3. El sistema llama a un procedimiento almacenado para actualizar el inventario de las
     bicicletas vendidas.
 
     ```sql
-    
+    CALL updateStockBike(7);
     ```
 
 4. El procedimiento almacenado actualiza el stock de cada bicicleta.
+
+    ```sql
+    DELIMITER $$
+    CREATE PROCEDURE updateStockBike(
+        IN inIdSale INT
+    )
+    BEGIN
+        UPDATE bike b
+        JOIN sale_detail sd ON b.id = sd.id_bike
+        SET b.stock = b.stock - sd.amount
+        WHERE sd.id_sale = inIdSale;
+    END $$
+    DELIMITER ;
+    ```
+
+    
 
 ### Caso de Uso 2: Registro de Nueva Venta
 
@@ -623,9 +677,58 @@ Vendedor
 ##### Flujo Principal:
 
 1. El vendedor ingresa al sistema.
+
 2. El vendedor registra una nueva venta.
+
 3. El sistema llama a un procedimiento almacenado para registrar la venta y sus detalles.
+
+   ```sql
+   CALL registerSale(2,1,2);
+   ```
+
 4. El procedimiento almacenado inserta la venta y sus detalles en las tablas correspondientes.
+
+   ```SQL
+   DELIMITER $$
+   CREATE PROCEDURE registerSale(
+       IN inIdCustomer VARCHAR(10),
+       IN inIdBike INT,
+       IN inAmount INT,
+       OUT outIdSale INT 
+   )
+   BEGIN
+       DECLARE unit_price DECIMAL(10, 2);
+       DECLARE total DECIMAL(10, 2);
+       
+       INSERT INTO sale (sale_date,id_customer,total) VALUES (NOW(),inIdCustomer,0);
+   
+       SET outIdSale = LAST_INSERT_ID();
+       
+       SELECT price INTO unit_price
+       FROM bike
+       WHERE id = inIdBike;
+   
+       SET total = unit_price * inAmount;
+   
+       INSERT INTO sale_detail (id_sale,id_bike,amount,unit_price) VALUES 			(outIdSale,inIdBike,inAmount,unit_price);
+   
+       UPDATE sale
+       SET total = total
+       WHERE id = outIdSale;
+   
+       UPDATE bike
+       SET stock = stock - inAmount
+       WHERE id = inIdBike;
+   
+       IF (SELECT stock FROM bike WHERE id = inIdBike) < 0 THEN
+           SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Stock insuficiente para la venta';
+       END IF;
+   END $$
+   
+   DELIMITER ;
+   ```
+
+   
 
 ###   Caso de Uso 3: Generación de Reporte de Ventas por Cliente
 
@@ -656,10 +759,38 @@ Vendedor
 #####   Flujo Principal:
 
 1. El administrador de compras ingresa al sistema.
+
 2. El administrador registra una nueva compra.
+
 3. El sistema llama a un procedimiento almacenado para registrar la compra y sus detalles.
+
+      ```sql
+      CALL registerPurchase('2023-08-2',1,2000,@idSale);
+      ```
+
+      
+
 4. El procedimiento almacenado inserta la compra y sus detalles en las tablas correspondientes
       y actualiza el stock de repuestos.
+
+      ```sql
+      DELIMITER $$
+      CREATE PROCEDURE registerPurchase(
+          IN inDate DATE,
+          IN inIdSupplier INT,
+          IN inTotal DOUBLE,
+          OUT outIdSale INT
+      )
+      BEGIN
+          INSERT INTO purchase (purchase_date, id_supplier, total)
+          VALUES (inDate, inIdSupplier, inTotal);
+      
+          SET outIdSale= LAST_INSERT_ID();
+      END $$
+      DELIMITER ;
+      ```
+
+      
 
 ###   Caso de Uso 5: Generación de Reporte de Inventario
 
@@ -708,9 +839,39 @@ Vendedor
 #####   Flujo Principal:
 
 1. El administrador ingresa al sistema.
+
 2. El administrador selecciona la opción para generar un reporte de clientes por ciudad.
+
 3. El sistema llama a un procedimiento almacenado para generar el reporte.
+
+   ```sql
+   CALL reporteClienteCiudad();
+   ```
+
 4. El procedimiento almacenado obtiene la información de los clientes agrupados por ciudad.
+
+   ```sql
+   DELIMITER $$
+   CREATE PROCEDURE reporteClienteCiudad()
+   BEGIN
+       SELECT 
+           ci.name_city AS City,
+           c.id AS "Id Customer",
+           c.customer_name AS "Customer",
+           c.email,
+           c.phone
+       FROM customer c
+       JOIN city ci 
+       ON 
+           ci.id = c.id_city
+       ORDER BY
+           ci.name_city,
+           c.customer_name;
+   END $$
+   DELIMITER ;
+   ```
+
+   
 
 ### Caso de Uso 8: Verificación de Stock antes de Venta
 
@@ -724,10 +885,39 @@ Vendedor
 ##### Flujo Principal:
 
 1. El vendedor ingresa al sistema.
+
 2. El vendedor selecciona una bicicleta para vender.
+
 3. El sistema llama a un procedimiento almacenado para verificar el stock.
+
+    ```sql
+    CALL verifyStockBike(2,3);
+    ```
+
 4. El procedimiento almacenado devuelve un mensaje indicando si hay suficiente stock para
     realizar la venta.
+
+    ```SQL
+    DELIMITER $$
+    CREATE PROCEDURE verifyStockBike(
+        IN inBIdBike INT,
+        IN inAmount INT
+    )
+    BEGIN 
+        DECLARE stockNow INT;
+    
+        SELECT b.stock INTO stockNow
+        FROM bike b
+        WHERE b.id = inIdBike;
+        
+        IF stockNow < inAmount THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Insuficient stock';
+        END IF;
+    END $$
+    DELIMITER ;
+    ```
+
+    
 
 ### Caso de Uso 9: Registro de Devoluciones
 
@@ -756,10 +946,48 @@ Administrador de Compras
 ##### Flujo Principal:
 
 1. El administrador de compras ingresa al sistema.
+
 2. El administrador selecciona un proveedor para generar un reporte de compras.
+
 3. El sistema llama a un procedimiento almacenado para generar el reporte.
+
+    ```sql
+    CALL reportPurchaseSupplier(2);
+    ```
+
 4. El procedimiento almacenado obtiene las compras y los detalles de las compras realizadas al
     proveedor.
+
+    ```sql
+    DELIMITER $$
+    CREATE PROCEDURE reportPurchaseSupplier(
+        IN inIdSupplier INT
+    )
+    BEGIN
+        
+        SELECT 
+            p.id AS "Purchase Id", 
+            p.sale_date, 
+            p.total, 
+            pd.id_replacemet, 
+            r.replacement_name AS "Replacement Name", 
+            pd.amount, 
+            pd.unit_price
+        FROM 
+            purchase p
+        JOIN 
+            purchase_detail ON c.id = pd.id_purchase
+        JOIN 
+            replacement r ON pd.id_replacement = r.id
+        WHERE 
+            p.id_supplier = inIdSupplier
+        ORDER BY 
+            p.sale_date DESC;
+    END $$
+    DELIMITER ;
+    ```
+
+    
 
 ### Caso de Uso 11: Calculadora de Descuentos en Ventas
 
